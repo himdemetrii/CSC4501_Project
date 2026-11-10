@@ -211,8 +211,8 @@ def edge_weight(
         return 1.0
 
     if policy == "min_latency":
-        # TODO 3B
-        raise NotImplementedError("Complete Task 3B")
+        # Path cost = sum of link delays.
+        return float(delay)
 
     if policy == "max_reliability":
         # TODO 3C

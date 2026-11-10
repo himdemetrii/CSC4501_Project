@@ -64,7 +64,7 @@ def load_topology(path: str | Path) -> nx.Graph:
       2. capacity >= 1
       3. the graph is connected
     """
-        with open(path, "r", encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     g = nx.Graph()
@@ -156,8 +156,23 @@ def generate_requests(
 
     Source and destination must be different.
     """
-    # TODO 2
-    raise NotImplementedError("Complete Task 2")
+       if arrival_rate_per_ms <= 0:
+        raise ValueError("arrival_rate_per_ms must be positive")
+
+    nodes = sorted(g.nodes())
+    if len(nodes) < 2:
+        raise ValueError("Need at least two nodes to generate requests")
+
+    requests: List[Request] = []
+    t = 0.0
+    for i in range(n_requests):
+        # Poisson arrivals <=> exponential inter-arrival times.
+        t += rng.expovariate(arrival_rate_per_ms)
+        # Sampling 2 distinct nodes guarantees src != dst (uniform over pairs).
+        src, dst = rng.sample(nodes, 2)
+        requests.append(Request(request_id=i, arrival_ms=t, src=src, dst=dst))
+
+    return requests
 
 
 # ============================================================

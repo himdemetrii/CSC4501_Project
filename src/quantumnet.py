@@ -207,8 +207,8 @@ def edge_weight(
     capacity = attrs["capacity"]
 
     if policy == "shortest_hop":
-        # TODO 3A
-        raise NotImplementedError("Complete Task 3A")
+        # Every link costs 1, so path cost = number of links.
+        return 1.0
 
     if policy == "min_latency":
         # TODO 3B

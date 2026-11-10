@@ -121,12 +121,12 @@ def draw_topology(g: nx.Graph, output_path: str | Path) -> None:
             f"L{i}\n{a['delay_ms']:g} ms, p={a['success_prob']:.2f}, c={a['capacity']}"
         )
 
-    plt.figure(figsize=(8.4, 3.7))
+    plt.figure(figsize=(9.6, 4.4))
     nx.draw_networkx_nodes(g, pos=pos, node_size=1050)
     nx.draw_networkx_edges(g, pos=pos, width=1.4)
     nx.draw_networkx_labels(g, pos=pos, font_size=10)
     nx.draw_networkx_edge_labels(
-        g, pos=pos, edge_labels=labels, font_size=8, rotate=False
+        g, pos=pos, edge_labels=labels, font_size=7, rotate=False,         bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.9),
     )
     plt.title("Six-QPU Distributed Network Topology")
     plt.axis("off")

@@ -52,7 +52,7 @@ class RequestResult:
     path: str
 
 
-# TASK 1: Build and validate the network topology 
+# TASK 1: Build and validate the network topology - 10 points
 
 
 def load_topology(path: str | Path) -> nx.Graph:

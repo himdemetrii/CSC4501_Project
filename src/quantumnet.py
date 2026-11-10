@@ -114,7 +114,12 @@ def draw_topology(g: nx.Graph, output_path: str | Path) -> None:
         ("Q2", "Q4"), ("Q3", "Q4"), ("Q3", "Q5"),
         ("Q4", "Q5"), ("Q4", "Q6"), ("Q5", "Q6"),
     ]
-    labels = {edge: f"L{i}" for i, edge in enumerate(ordered_edges, start=1)}
+    labels = {}
+    for i, (u, v) in enumerate(ordered_edges, start=1):
+        a = g[u][v]
+        labels[(u, v)] = (
+            f"L{i}\n{a['delay_ms']:g} ms, p={a['success_prob']:.2f}, c={a['capacity']}"
+        )
 
     plt.figure(figsize=(8.4, 3.7))
     nx.draw_networkx_nodes(g, pos=pos, node_size=1050)

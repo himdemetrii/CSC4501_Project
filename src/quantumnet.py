@@ -52,9 +52,8 @@ class RequestResult:
     path: str
 
 
-# ============================================================
-# TASK 1 — Build and validate the network topology [10 points]
-# ============================================================
+# TASK 1: Build and validate the network topology 
+
 
 def load_topology(path: str | Path) -> nx.Graph:
     """
@@ -87,10 +86,10 @@ def load_topology(path: str | Path) -> nx.Graph:
         if delay < 0:
             raise ValueError(f"Link {u}-{v}: delay_ms must be >= 0, got {delay}")
 
-        # Keep every attribute from the JSON (not just the three we use).
+        # Keep every attribute from the JSON 
         attrs = {k: val for k, val in link.items() if k not in ("u", "v")}
         attrs.update(delay_ms=delay, success_prob=p, capacity=capacity)
-        attrs.setdefault("link_id", f"L{idx}")  # L1..L9 in file order
+        attrs.setdefault("link_id", f"L{idx}")  # L1-L9 in file order
         g.add_edge(u, v, **attrs)
 
     if g.number_of_nodes() == 0 or not nx.is_connected(g):

@@ -65,12 +65,38 @@ def load_topology(path: str | Path) -> nx.Graph:
       2. capacity >= 1
       3. the graph is connected
     """
-    # TODO 1:
-    # - Read the JSON file.
-    # - Add all nodes.
-    # - Add all links with delay_ms, success_prob, and capacity.
-    # - Validate the link values and graph connectivity.
-    raise NotImplementedError("Complete Task 1")
+        with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    g = nx.Graph()
+    g.add_nodes_from(data["nodes"])
+
+    for idx, link in enumerate(data["links"], start=1):
+        u, v = link["u"], link["v"]
+        if u not in g or v not in g:
+            raise ValueError(f"Link {u}-{v} references an unknown node")
+
+        delay = float(link["delay_ms"])
+        p = float(link["success_prob"])
+        capacity = int(link["capacity"])
+
+        if not (0.0 < p <= 1.0):
+            raise ValueError(f"Link {u}-{v}: success_prob must be in (0, 1], got {p}")
+        if capacity < 1:
+            raise ValueError(f"Link {u}-{v}: capacity must be >= 1, got {capacity}")
+        if delay < 0:
+            raise ValueError(f"Link {u}-{v}: delay_ms must be >= 0, got {delay}")
+
+        # Keep every attribute from the JSON (not just the three we use).
+        attrs = {k: val for k, val in link.items() if k not in ("u", "v")}
+        attrs.update(delay_ms=delay, success_prob=p, capacity=capacity)
+        attrs.setdefault("link_id", f"L{idx}")  # L1..L9 in file order
+        g.add_edge(u, v, **attrs)
+
+    if g.number_of_nodes() == 0 or not nx.is_connected(g):
+        raise ValueError("Topology must be a non-empty connected graph")
+
+    return g
 
 
 def draw_topology(g: nx.Graph, output_path: str | Path) -> None:

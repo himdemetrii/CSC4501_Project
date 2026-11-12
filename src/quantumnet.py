@@ -215,9 +215,10 @@ def edge_weight(
         return float(delay)
 
     if policy == "max_reliability":
-        # TODO 3C
-        # Hint: logarithms convert products into sums.
-        raise NotImplementedError("Complete Task 3C")
+        # max prod(p_e)  <=>  max sum(ln p_e)  <=>  min sum(-ln p_e).
+        # ln is strictly increasing, so the ordering of paths is preserved,
+        # and -ln p_e >= 0 for 0 < p_e <= 1, so Dijkstra is valid.
+        return -math.log(p)
 
     if policy == "student_policy":
         # TODO 3D

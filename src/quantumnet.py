@@ -261,9 +261,9 @@ class LinkState:
         self.capacity = capacity
 
         # TODO 4A:
-        # Create a min-heap with one 0.0 value per capacity slot.
-        self.available_times = []
-
+        # One "next free at" time per slot; all slots start free at t = 0.
+        self.available_times = [0.0] * capacity
+        heapq.heapify(self.available_times)
         self.busy_time = 0.0
         self.jobs = 0
 

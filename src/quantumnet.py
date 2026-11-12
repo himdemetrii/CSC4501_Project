@@ -275,8 +275,14 @@ class LinkState:
         finish_time = start_time + service_ms
         """
         # TODO 4B:
-        # Update the slot heap, busy_time, and jobs.
-        raise NotImplementedError("Complete Task 4B")
+        earliest_free = heapq.heappop(self.available_times)
+        start = max(ready_ms, earliest_free)
+        finish = start + service_ms
+        heapq.heappush(self.available_times, finish)
+
+        self.busy_time += service_ms
+        self.jobs += 1
+        return start, finish
 
 
 def canonical_edge(u: str, v: str) -> Tuple[str, str]:

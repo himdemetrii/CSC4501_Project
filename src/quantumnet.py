@@ -237,9 +237,13 @@ def choose_path(
     beta: float = 15.0,
 ) -> List[str]:
     """Select a path using Dijkstra's algorithm and edge_weight(...)."""
-    # TODO 3E
-    raise NotImplementedError("Complete Task 3E")
+        if src == dst:
+        return [src]
 
+    def weight(u: str, v: str, attrs: dict) -> float:
+        return edge_weight(policy, attrs, alpha=alpha, beta=beta)
+
+    return nx.dijkstra_path(g, src, dst, weight=weight)
 
 # ============================================================
 # TASK 4 — Model link capacity and queueing [15 points]

@@ -222,7 +222,7 @@ def edge_weight(
 
     if policy == "student_policy":
         # TODO 3D
-        # Use at least TWO of: delay, p, capacity.
+        # Use at least two of: delay, p, and capacity
         raise NotImplementedError("Complete Task 3D")
 
     raise ValueError(f"Unknown policy: {policy}")
@@ -261,7 +261,7 @@ class LinkState:
         self.capacity = capacity
 
         # TODO 4A:
-        # One "next free at" time per slot; all slots start free at t = 0.
+        # One next free at for time per slot; all slots start free at t = 0
         self.available_times = [0.0] * capacity
         heapq.heapify(self.available_times)
         self.busy_time = 0.0
@@ -324,6 +324,10 @@ def simulate(
     """
     # TODO 5A:
     # Initialize random generator and link states.
+    # Fresh RNG + empty links for every policy and trace run
+    rng = random.Random(seed)
+    links = make_link_states(g)
+    path_cache: Dict[Tuple[str, str], List[str]] = {}
 
     # TODO 5B:
     # Process requests in increasing arrival-time order.

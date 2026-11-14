@@ -330,7 +330,13 @@ def simulate(
     path_cache: Dict[Tuple[str, str], List[str]] = {}
 
     # TODO 5B:
-    # Process requests in increasing arrival-time order.
+    # Process requests in increasing arrival-time order
+    results: List[RequestResult] = []
+    for req in sorted(requests, key=lambda r: (r.arrival_ms, r.request_id)):
+        key = (req.src, req.dst)
+        if key not in path_cache:  # static weights -> path never changes
+            path_cache[key] = choose_path(g, req.src, req.dst, policy, alpha, beta)
+        path = path_cache[key]
 
     # TODO 5C:
     # Return:

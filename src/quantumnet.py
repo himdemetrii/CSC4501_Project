@@ -292,8 +292,10 @@ def canonical_edge(u: str, v: str) -> Tuple[str, str]:
 def make_link_states(g: nx.Graph) -> Dict[Tuple[str, str], LinkState]:
     """Create one LinkState object for each network link."""
     # TODO 4C
-    raise NotImplementedError("Complete Task 4C")
-
+        return {
+        canonical_edge(u, v): LinkState(int(attrs["capacity"]))
+        for u, v, attrs in g.edges(data=True)
+    }
 
 # ============================================================
 # TASK 5 — End-to-end simulation and metrics [20 points]

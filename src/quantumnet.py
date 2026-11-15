@@ -406,7 +406,27 @@ def summarize(request_df: pd.DataFrame, offered_load: float) -> dict:
       throughput_req_per_s
     """
     # TODO 5D
-    raise NotImplementedError("Complete Task 5D")
+       n_total = len(request_df)
+    ok = request_df[request_df["success"]]
+    n_success = len(ok)
+    # Simulation starts at t = 0 (first arrival is at t > 0) and ends when the
+    # last request finishes (successfully or not).
+    sim_time_ms = float(request_df["finish_ms"].max()) if n_total else 0.0
+
+    return {
+        "policy": request_df["policy"].iloc[0] if n_total else "",
+        "offered_load": offered_load,
+        "n_requests": n_total,
+        "n_success": n_success,
+        "success_rate": n_success / n_total if n_total else 0.0,
+        # End-to-end latency of delivered requests (arrival -> final link done).
+        "avg_latency_ms": float(ok["latency_ms"].mean()) if n_success else float("nan"),
+        # Queueing delay averaged over all requests.
+        "avg_waiting_ms": float(request_df["waiting_ms"].mean()) if n_total else 0.0,
+        "avg_hops": float(request_df["hop_count"].mean()) if n_total else 0.0,
+        "sim_time_ms": sim_time_ms,
+        "throughput_req_per_s": n_success / (sim_time_ms / 1000.0) if sim_time_ms > 0 else 0.0,
+    }
 
 
 # ============================================================

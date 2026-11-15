@@ -339,11 +339,60 @@ def simulate(
         path = path_cache[key]
 
     # TODO 5C:
-    # Return:
-    #   request_df with per-request results
-    #   link_df with policy, link, jobs, utilization
-    raise NotImplementedError("Complete Task 5")
+           t = req.arrival_ms
+        waiting = 0.0
+        success = True
+        hops_used = 0
 
+        for u, v in zip(path[:-1], path[1:]):
+            attrs = g[u][v]
+            start, finish = links[canonical_edge(u, v)].reserve(t, attrs["delay_ms"])
+            waiting += start - t
+            t = finish
+            hops_used += 1
+            if rng.random() > attrs["success_prob"]:
+                success = False
+                break  # first failed link ends the request
+
+        results.append(
+            RequestResult(
+                request_id=req.request_id,
+                policy=policy,
+                src=req.src,
+                dst=req.dst,
+                arrival_ms=req.arrival_ms,
+                finish_ms=t,
+                latency_ms=t - req.arrival_ms,
+                waiting_ms=waiting,
+                hop_count=len(path) - 1,
+                success=success,
+                path="-".join(path),
+            )
+        )
+
+    # 5C: per-request and per-link tables.
+    request_df = pd.DataFrame([asdict(r) for r in results])
+    sim_time_ms = float(request_df["finish_ms"].max()) if len(request_df) else 0.0
+
+    link_rows = []
+    for u, v, attrs in sorted(g.edges(data=True), key=lambda e: e[2]["link_id"]):
+        state = links[canonical_edge(u, v)]
+        denom = state.capacity * sim_time_ms
+        link_rows.append(
+            {
+                "policy": policy,
+                "link": attrs["link_id"],
+                "endpoints": f"{u}-{v}",
+                "capacity": state.capacity,
+                "jobs": state.jobs,
+                "busy_ms": state.busy_time,
+                # fraction of total slot-time the link was in service
+                "utilization": state.busy_time / denom if denom > 0 else 0.0,
+            }
+        )
+    link_df = pd.DataFrame(link_rows)
+
+    return request_df, link_df
 
 def summarize(request_df: pd.DataFrame, offered_load: float) -> dict:
     """

@@ -28,6 +28,13 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 
+POLICIES = ["shortest_hop", "min_latency", "max_reliability", "student_policy"]
+OFFERED_LOADS = [0.02, 0.05, 0.10, 0.15]  # requests per ms
+
+# Student policy parameters
+STUDENT_ALPHA = 1.0   # weight on delay (ms per ms)
+STUDENT_BETA = 30.0   # ms of delay traded for one unit of -ln(p)
+
 
 @dataclass
 class Request:

@@ -229,8 +229,14 @@ def edge_weight(
 
     if policy == "student_policy":
         # TODO 3D
-        # Use at least two of: delay, p, and capacity
-        raise NotImplementedError("Complete Task 3D")
+               # Reliability-penalized latency (uses delay AND success probability):
+        #     w_e = alpha * d_e + beta * (-ln p_e)
+        # Summed over a path: alpha * total_delay + beta * (-ln P_success).
+        # beta is an exchange rate in ms per unit of -ln(p). A detour that
+        # adds Delta_d ms is taken only if it multiplies the end-to-end
+        # success probability by more than exp(Delta_d / beta).
+        # beta = 30: +5 ms must buy >18% relative reliability, +7 ms >26%.
+        return alpha * float(delay) + beta * (-math.log(p))
 
     raise ValueError(f"Unknown policy: {policy}")
 

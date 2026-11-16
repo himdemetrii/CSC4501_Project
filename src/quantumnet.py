@@ -471,7 +471,38 @@ def run_experiments(
     # - Run all four policies on the same trace.
     # - Save per-request and per-link CSV files.
     # - Save and return summary.csv.
-    raise NotImplementedError("Complete Task 6A")
+      output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    summaries = []
+    all_requests = []
+    all_links = []
+
+    for load in OFFERED_LOADS:
+        # One trace per load, seeded from the base seed and the load value.
+        load_key = int(round(load * 10000))
+        trace_rng = random.Random(seed * 100003 + load_key)
+        trace = generate_requests(g, n_requests, load, trace_rng)
+
+        for policy in POLICIES:
+            # Same trace and same link-outcome seed for every policy.
+            req_df, link_df = simulate(g, trace, policy, seed=seed * 7919 + load_key)
+            req_df.insert(1, "offered_load", load)
+            link_df.insert(1, "offered_load", load)
+            all_requests.append(req_df)
+            all_links.append(link_df)
+            summaries.append(summarize(req_df, load))
+
+    pd.concat(all_requests, ignore_index=True).to_csv(
+        output_dir / "requests.csv", index=False
+    )
+    pd.concat(all_links, ignore_index=True).to_csv(
+        output_dir / "link_utilization.csv", index=False
+    )
+    summary_df = pd.DataFrame(summaries)
+    summary_df.to_csv(output_dir / "summary.csv", index=False)
+
+    return summary_df
 
 
 def plot_metric(

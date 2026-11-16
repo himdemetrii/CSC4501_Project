@@ -189,8 +189,8 @@ def generate_requests(
 def edge_weight(
     policy: str,
     attrs: dict,
-    alpha: float = 1.0,
-    beta: float = 15.0,
+    alpha: float = STUDENT_ALPHA,
+    beta: float = STUDENT_BETA,
 ) -> float:
     """
     Required policies:
@@ -246,8 +246,8 @@ def choose_path(
     src: str,
     dst: str,
     policy: str,
-    alpha: float = 1.0,
-    beta: float = 15.0,
+    alpha: float = STUDENT_ALPHA,
+    beta: float = STUDENT_BETA,
 ) -> List[str]:
     """Select a path using Dijkstra's algorithm and edge_weight(...)."""
         if src == dst:
@@ -319,8 +319,8 @@ def simulate(
     requests: List[Request],
     policy: str,
     seed: int,
-    alpha: float = 1.0,
-    beta: float = 15.0,
+    alpha: float = STUDENT_ALPHA,
+    beta: float = STUDENT_BETA,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     For each request:

@@ -163,7 +163,7 @@ def generate_requests(
 
     Source and destination must be different.
     """
-       if arrival_rate_per_ms <= 0:
+    if arrival_rate_per_ms <= 0:
         raise ValueError("arrival_rate_per_ms must be positive")
 
     nodes = sorted(g.nodes())
@@ -250,7 +250,7 @@ def choose_path(
     beta: float = STUDENT_BETA,
 ) -> List[str]:
     """Select a path using Dijkstra's algorithm and edge_weight(...)."""
-        if src == dst:
+    if src == dst:
         return [src]
 
     def weight(u: str, v: str, attrs: dict) -> float:
@@ -352,7 +352,7 @@ def simulate(
         path = path_cache[key]
 
     # TODO 5C:
-           t = req.arrival_ms
+    t = req.arrival_ms
         waiting = 0.0
         success = True
         hops_used = 0
@@ -419,7 +419,7 @@ def summarize(request_df: pd.DataFrame, offered_load: float) -> dict:
       throughput_req_per_s
     """
     # TODO 5D
-       n_total = len(request_df)
+    n_total = len(request_df)
     ok = request_df[request_df["success"]]
     n_success = len(ok)
     # Simulation starts at t = 0 (first arrival is at t > 0) and ends when the

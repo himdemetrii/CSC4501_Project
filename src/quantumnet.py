@@ -514,7 +514,15 @@ def make_plots(summary_df: pd.DataFrame, output_dir: Path) -> None:
     """
     # TODO 6B:
     # Call plot_metric(...) for all four required metrics.
-    raise NotImplementedError("Complete Task 6B")
+       output_dir = Path(output_dir)
+    plot_metric(summary_df, "success_rate", "Request Success Rate",
+                output_dir / "success_rate_vs_load.png")
+    plot_metric(summary_df, "avg_latency_ms", "Average End-to-End Latency (ms)",
+                output_dir / "latency_vs_load.png")
+    plot_metric(summary_df, "throughput_req_per_s", "Throughput (successful requests/s)",
+                output_dir / "throughput_vs_load.png")
+    plot_metric(summary_df, "avg_waiting_ms", "Average Queue Waiting Time (ms)",
+                output_dir / "waiting_vs_load.png")
 
 
 def main() -> None:
